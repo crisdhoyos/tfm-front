@@ -1,6 +1,6 @@
-import { Search, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search, X } from "lucide-react";
 import { FormEvent, useState } from "react";
 
 interface SearchBarProps {
@@ -14,7 +14,7 @@ export function SearchBar({ onSearch, isSearching }: SearchBarProps) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const query = formData.get('search') as string;
+    const query = formData.get("search") as string;
     onSearch(query);
   };
 
@@ -24,7 +24,7 @@ export function SearchBar({ onSearch, isSearching }: SearchBarProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative max-w-2xl mx-auto">
+    <form onSubmit={handleSubmit} className="relative mx-3 max-w-xl flex-1">
       <div className="relative flex group focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 rounded-md">
         <div className="relative flex-1">
           {inputValue ? (
@@ -42,20 +42,16 @@ export function SearchBar({ onSearch, isSearching }: SearchBarProps) {
             name="search"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            className="pl-10 rounded-r-none focus-visible:ring-0 focus-visible:ring-offset-0 h-12"
+            className="pl-10 rounded-r-none focus-visible:ring-0 focus-visible:ring-offset-0 h-12 bg-input-bg text-input-text"
             placeholder="Search by title, keywords, or transcription..."
           />
         </div>
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           disabled={isSearching}
           className="h-12 rounded-l-none border-l-0 min-w-[100px] focus-visible:ring-0 focus-visible:ring-offset-0"
         >
-          {isSearching ? (
-            <span className="animate-spin">⏳</span>
-          ) : (
-            'Search'
-          )}
+          {isSearching ? <span className="animate-spin">⏳</span> : "Search"}
         </Button>
       </div>
     </form>

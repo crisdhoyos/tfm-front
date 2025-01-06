@@ -18,7 +18,7 @@ export default function AudioDetail() {
 
   return (
     <div className="container py-8 page-transition">
-      {/* Header */}
+      {/* titulo */}
       <div className="flex items-center gap-4 mb-8">
         <Link to="/">
           <Button variant="ghost" size="icon">
@@ -28,9 +28,9 @@ export default function AudioDetail() {
         <h1 className="text-3xl font-bold">{mockAudio.title}</h1>
       </div>
 
-      {/* Main Content */}
+      {/* contenido */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Left Section: Description and Transcription */}
+        {/* seccion izquierda: descripcion y transcripcion */}
         <div className="space-y-8">
           <div>
             <h2 className="text-lg font-semibold mb-2">Description</h2>
@@ -42,7 +42,7 @@ export default function AudioDetail() {
           </div>
         </div>
 
-        {/* Right Section: Video, Keywords, and Categories */}
+        {/* seccion derecha: video, keywords y categorias */}
         <div className="space-y-8">
           <div className="aspect-video w-full rounded-lg overflow-hidden">
             <iframe

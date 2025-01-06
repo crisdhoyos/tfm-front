@@ -5,67 +5,63 @@
 @layer base {
   :root {
     --bg-color: #ffffff;
-    --bg-color-secondary: #eed4ee;
-    /* --bg-color: #ffffff;
-    --bg-color-secondary: #f3f3f3; */
-    --background: #ffffff;
+    --bg-color-secondary: #f8f9fb;
     --foreground: #0a0a0a;
-    --card: #f3f3f3;
-    /* --card: #ffffff; */
+    --card: #e4e9f1bb;
     --card-foreground: #0a0a0a;
-    --popover: #ffffff;
-    --popover-foreground: #0a0a0a;
-    --primary: #d959e0;
+    --primary: #1c263d;
+    --primary-hover: #1d3979;
     --primary-foreground: #ffffff;
-    --secondary: #f3f3f3;
+    --secondary: #3c4652;
     --secondary-foreground: #191919;
-    --muted: #f3f3f3;
+    --muted: #dde2ed;
     --muted-foreground: #767676;
-    --accent: #e63946;
-    /* --accent: #e07f59; */
+    --accent: #187ff5;
     --accent-foreground: #ffffff;
     --destructive: #e07f59;
-    /* --destructive: #e63946; */
     --destructive-foreground: #ffffff;
-    --border: #e6e6e6;
-    --input: #e6e6e6;
-    --ring: #d959e0;
+    --ring: #1d252d;
     --radius: 0.75rem;
     --success: #00a86b;
     --error: #e63947de;
-    --skeleton: #e18ae5;
+    --skeleton: #dde2ed;
+    --input-border: #e4e9f1;
+    --input-bg: #e4e9f1;
+    --input-text: #1d252d;
+    --logo-a: #1d3979;
+    --logo-b: #187ff5;
   }
 
   .dark {
-    --bg-color: #060913;
-    --bg-color-secondary: #1f1535;
-    --background: #060913;
-    --foreground: #ffffff;
-    --card: #312350e3;
-    /* --card: #341033; */
+    --bg-color: #101b23;
+    --bg-color-secondary: #1b3141;
+    --foreground: #f8ffff;
+    --card: #101b23bb;
     --card-foreground: #ffffff;
-    --popover: #341033;
-    --popover-foreground: #ffffff;
-    --primary: #d959e0;
+    --primary: #b58b3f;
+    --primary-hover: #f5a518;
     --primary-foreground: #ffffff;
-    --secondary: #1f1535;
+    --secondary: #3c4652;
     --secondary-foreground: #ffffff;
-    --muted: #503453;
+    --muted: #243446;
     --muted-foreground: #cccccc;
-    --accent: #e63946;
+    --accent: #187ff5;
     --accent-foreground: #ffffff;
     --destructive: #e07f59;
     --destructive-foreground: #ffffff;
-    --border: #503453;
-    --input: #503453;
-    --ring: #d959e0;
+    --ring: #b58b3f;
+    --radius: 0.75rem;
     --success: #37c490de;
     --error: #e63947de;
-    --skeleton: #503453;
+    --skeleton: #3c4652;
+    --input-border: #243446;
+    --input-bg: #243446;
+    --input-text: #f8ffff;
+    --logo-a: #b58b3f;
+    --logo-b: #ffffff;
   }
 
   * {
-    @apply border-border;
     font-family: "Roboto", serif;
     font-style: normal;
   }
@@ -81,8 +77,8 @@
     font-optical-sizing: auto;
     font-weight: 700;
     font-style: normal;
-    color: #ce303b;
-    background-image: linear-gradient(225deg, #ce303b 12%, #ee40f3 61%);
+    color: #d98673;
+    @apply bg-logo-background;
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

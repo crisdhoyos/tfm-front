@@ -41,7 +41,7 @@ export function Dialog({ isOpen, onClose, children }: DialogProps) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <HeadlessDialogPanel className="w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <HeadlessDialogPanel className="w-full max-w-md transform overflow-hidden rounded-lg bg-bg-color p-6 text-left align-middle shadow-xl transition-all">
                 {children}
                 <button
                   onClick={onClose}
@@ -68,7 +68,7 @@ export function DialogFooter({ children }: { children: ReactNode }) {
 
 export function DialogTitle({ children }: { children: ReactNode }) {
   return (
-    <HeadlessDialogTitle className="text-black p-3 font-medium">
+    <HeadlessDialogTitle className="text-card-foreground p-3 font-medium">
       {children}
     </HeadlessDialogTitle>
   );

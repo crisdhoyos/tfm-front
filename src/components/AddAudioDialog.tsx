@@ -56,6 +56,7 @@ export function AddAudioDialog() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               placeholder="Enter YouTube URL..."
+              className="bg-input-bg text-input-text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
             />
@@ -65,8 +66,10 @@ export function AddAudioDialog() {
           </form>
         ) : (
           <div className="flex flex-col items-center space-y-4">
-            <ScaleLoader color="#d959e0" />
-            <p className="text-center text-sm text-gray-500">Cargando...</p>
+            <ScaleLoader color="#187ff5" />
+            <p className="text-center text-sm text-card-foreground">
+              Cargando...
+            </p>
           </div>
         )}
       </Dialog>
