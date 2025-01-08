@@ -1,21 +1,16 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Headphones, Play } from "lucide-react";
 import { Link } from "react-router-dom";
+import { IAudio } from "../api/contexts/interfaces";
 
-interface AudioCardProps {
-  id: string;
-  title: string;
-  thumbnail: string;
-}
-
-export function AudioCard({ id, title, thumbnail }: AudioCardProps) {
+export function AudioCard({ id, name, youtubeId }: IAudio) {
   return (
     <Link to={`/audio/${id}`}>
-      <Card className="audio-card group">
+      <Card className="audio-card group h-full">
         <CardContent className="p-0 relative aspect-video">
           <img
-            src={thumbnail}
-            alt={title}
+            src={`https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`}
+            alt={name}
             className="w-full h-full object-cover"
             loading="lazy"
           />
@@ -26,7 +21,7 @@ export function AudioCard({ id, title, thumbnail }: AudioCardProps) {
         <CardFooter className="p-4">
           <div className="flex items-start gap-2">
             <Headphones className="w-4 h-4 mt-1 flex-shrink-0" />
-            <h3 className="font-medium line-clamp-2">{title}</h3>
+            <h3 className="font-medium line-clamp-2">{name}</h3>
           </div>
         </CardFooter>
       </Card>

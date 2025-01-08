@@ -1,67 +1,100 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Toast, ToastContainer } from "@/components/ui/toast";
+import {
+  IToast,
+  Toast,
+  ToastContainer,
+  ToastVariant,
+} from "@/components/ui/toast";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { ScaleLoader } from "react-spinners";
+import { API } from "../api";
 
-export function AddAudioDialog() {
+interface AddAudioDialogProps {
+  refreshAudios: () => void;
+}
+
+export function AddAudioDialog({ refreshAudios }: AddAudioDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [toasts, setToasts] = useState<
-    { id: number; message: string; description?: string; variant?: string }[]
-  >([]);
+  const [toasts, setToasts] = useState<IToast[]>([]);
 
-  const addToast = () => {
-    const newToast = {
-      id: Date.now(),
-      message: "New Notification",
-      description: "This is a toast message",
-      variant: "error",
-    };
-    setToasts([...toasts, newToast]);
-    setTimeout(() => removeToast(newToast.id), 4000);
+  const addToast = (data: IToast) => {
+    setToasts([...toasts, data]);
+    setTimeout(() => removeToast(data.id), 8000);
   };
 
-  const removeToast = (id: number) => {
+  const removeToast = (id?: number) => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
+
+  const indexVideo = async (youtubeUrl: string) => {
+    try {
+      const response = await API.youtube.indexVideo(youtubeUrl);
+      console.log(response);
+      setIsLoading(false);
+      setUrl("");
+      if (response) {
+        addToast({
+          id: Date.now(),
+          message: "Audio agregado",
+          description:
+            "Se agregó el audio y se realizó la indexación correctamente",
+          variant: ToastVariant.DEFAULT,
+        });
+        setIsOpen(false);
+        refreshAudios();
+      } else {
+        addToast({
+          id: Date.now(),
+          message: "Error al agregar el audio",
+          description: "Hubo un error al agregar el audio, intente de nuevo",
+          variant: ToastVariant.ERROR,
+        });
+      }
+    } catch (error) {
+      setIsLoading(false);
+      setUrl("");
+      addToast({
+        id: Date.now(),
+        message: "Error al agregar el audio",
+        description: "Hubo un error al agregar el audio, intente de nuevo",
+        variant: ToastVariant.ERROR,
+      });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here we'll add the logic to process the YouTube URL
-    addToast();
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-    // setUrl("");
+    indexVideo(url);
   };
 
   return (
     <>
       <Button onClick={() => setIsOpen(true)} className="gap-2">
         <Plus className="w-4 h-4" />
-        Add Audio
+        Agregar audio
       </Button>
 
       <Dialog isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <DialogHeader>
-          <DialogTitle>Add new audio</DialogTitle>
+          <DialogTitle>Agregar nuevo audio para indexar</DialogTitle>
         </DialogHeader>
 
         {!isLoading ? (
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              placeholder="Enter YouTube URL..."
+              placeholder="Ingrese la url de YouTube..."
               className="bg-input-bg text-input-text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
             />
             <Button type="submit" className="w-full">
-              Add Audio
+              Agregar
             </Button>
           </form>
         ) : (
@@ -80,7 +113,7 @@ export function AddAudioDialog() {
             key={toast.id}
             message={toast.message}
             description={toast.description}
-            variant={toast.variant as "default" | "error"}
+            variant={toast.variant}
             onClose={() => removeToast(toast.id)}
           />
         ))}

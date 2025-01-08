@@ -1,16 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, X } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent } from "react";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
   isSearching: boolean;
+  inputValue: string;
+  setInputValue: (value: string) => void;
 }
 
-export function SearchBar({ onSearch, isSearching }: SearchBarProps) {
-  const [inputValue, setInputValue] = useState("");
-
+export function SearchBar({
+  onSearch,
+  isSearching,
+  inputValue,
+  setInputValue,
+}: SearchBarProps) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -43,7 +48,7 @@ export function SearchBar({ onSearch, isSearching }: SearchBarProps) {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             className="pl-10 rounded-r-none focus-visible:ring-0 focus-visible:ring-offset-0 h-12 bg-input-bg text-input-text"
-            placeholder="Search by title, keywords, or transcription..."
+            placeholder="Buscar en la lista de audios..."
           />
         </div>
         <Button
@@ -51,7 +56,7 @@ export function SearchBar({ onSearch, isSearching }: SearchBarProps) {
           disabled={isSearching}
           className="h-12 rounded-l-none border-l-0 min-w-[100px] focus-visible:ring-0 focus-visible:ring-offset-0"
         >
-          {isSearching ? <span className="animate-spin">⏳</span> : "Search"}
+          {isSearching ? <span className="animate-spin">⏳</span> : "Buscar"}
         </Button>
       </div>
     </form>

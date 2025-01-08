@@ -1,38 +1,40 @@
 import { useState } from "react";
+import { ICategory } from "../api/contexts/interfaces";
+import { capitalize } from "../utils";
 
 interface TagsSectionProps {
-  tags: string[];
-  onCategorySelect: (category: string) => void;
+  tags: ICategory[];
+  selectedCategory: ICategory | null;
+  onCategorySelect: (category: ICategory | null) => void;
 }
 
 export default function TagsSection({
   tags,
+  selectedCategory,
   onCategorySelect,
 }: TagsSectionProps) {
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
 
   const displayedTags = showAll ? tags : tags.slice(0, 10);
 
-  const handleTagClick = (tag: string) => {
-    const newSelectedTag = tag === selectedTag ? null : tag;
-    setSelectedTag(newSelectedTag);
-    onCategorySelect(newSelectedTag || "");
+  const handleTagClick = (tag: ICategory) => {
+    const newSelectedTag = tag.id === selectedCategory?.id ? null : tag;
+    onCategorySelect(newSelectedTag || null);
   };
 
   return (
     <div className="flex flex-wrap gap-2 items-center">
-      {displayedTags.map((tag, index) => (
+      {displayedTags.map((tag) => (
         <button
-          key={index}
+          key={tag.id}
           onClick={() => handleTagClick(tag)}
           className={`px-3 py-1 rounded-full text-sm ${
-            selectedTag === tag
+            selectedCategory?.id === tag.id
               ? "bg-accent text-white"
               : "bg-muted text-foreground"
           } hover:bg-secondary hover:text-white transition`}
         >
-          {tag}
+          {capitalize(tag.name)}
         </button>
       ))}
       {tags.length > 10 && (

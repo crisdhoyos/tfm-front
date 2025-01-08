@@ -1,17 +1,26 @@
 import { X } from "lucide-react";
 import { ReactNode } from "react";
 
-interface ToastProps {
+export enum ToastVariant {
+  DEFAULT = "default",
+  ERROR = "error",
+}
+
+export interface IToast {
+  id?: number;
   message: string;
   description?: string;
-  variant?: "default" | "error";
+  variant?: ToastVariant;
+}
+
+interface ToastProps extends IToast {
   onClose?: () => void;
 }
 
 export function Toast({
   message,
   description,
-  variant = "default",
+  variant = ToastVariant.DEFAULT,
   onClose,
 }: ToastProps) {
   const baseClasses = `

@@ -5,119 +5,100 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { API } from "../api";
+import {
+  IAudio,
+  ICategory,
+  IFilterAllAudios,
+} from "../api/contexts/interfaces";
 import { AddAudioDialog } from "../components/AddAudioDialog";
 
-// Temporary mock data
-const mockAudios = [
-  {
-    id: "1",
-    title: "Relaxing Piano Music",
-    thumbnail: "https://i.ytimg.com/vi/77ZozI0rw7w/maxresdefault.jpg",
-  },
-  {
-    id: "2",
-    title: "Ambient Study Music",
-    thumbnail: "https://i.ytimg.com/vi/sjkrrmBnpGE/maxresdefault.jpg",
-  },
-  {
-    id: "3",
-    title: "Ambient Study Music",
-    thumbnail: "https://i.ytimg.com/vi/sjkrrmBnpGE/maxresdefault.jpg",
-  },
-  {
-    id: "4",
-    title: "Ambient Study Music",
-    thumbnail: "https://i.ytimg.com/vi/sjkrrmBnpGE/maxresdefault.jpg",
-  },
-  {
-    id: "5",
-    title: "Ambient Study Music",
-    thumbnail: "https://i.ytimg.com/vi/sjkrrmBnpGE/maxresdefault.jpg",
-  },
-  {
-    id: "6",
-    title: "Ambient Study Music",
-    thumbnail: "https://i.ytimg.com/vi/sjkrrmBnpGE/maxresdefault.jpg",
-  },
-  {
-    id: "7",
-    title: "Ambient Study Music",
-    thumbnail: "https://i.ytimg.com/vi/sjkrrmBnpGE/maxresdefault.jpg",
-  },
-  {
-    id: "8",
-    title: "Ambient Study Music",
-    thumbnail: "https://i.ytimg.com/vi/sjkrrmBnpGE/maxresdefault.jpg",
-  },
-  {
-    id: "9",
-    title: "Ambient Study Music",
-    thumbnail: "https://i.ytimg.com/vi/sjkrrmBnpGE/maxresdefault.jpg",
-  },
-  {
-    id: "10",
-    title: "Ambient Study Music",
-    thumbnail: "https://i.ytimg.com/vi/sjkrrmBnpGE/maxresdefault.jpg",
-  },
-];
-
-const mockTags = [
-  "Relaxing",
-  "Ambient",
-  "Piano",
-  "Study",
-  "Focus",
-  "Sleep",
-  "Meditation",
-  "Nature",
-  "Background",
-  "Chill",
-  "Classical",
-];
-
 export default function Index() {
+  // search
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [_selectedCategory, setSelectedCategory] = useState<string | null>(
+
+  // audios
+  const [audios, setAudios] = useState<IAudio[]>([]);
+  const [paginatedAudios, setPaginatedAudios] = useState<IAudio[]>([]);
+
+  // categories
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
     null
   );
+
+  // paginacion
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const itemsPerPage = 8;
 
+  // theme
   const { theme, setTheme } = useTheme();
 
-  const handleSearch = async (query: string) => {
-    setIsSearching(true);
+  useEffect(() => {
+    refreshAudios();
+  }, []);
+
+  useEffect(() => {
+    handlePageChange(currentPage);
+  }, [audios]);
+
+  const getCategories = async () => {
+    const response = await API.categories.getAllCategories();
+    setCategories(response);
+  };
+
+  const getAudios = async (filters: IFilterAllAudios = {}) => {
+    // Se simula una demora en la busqueda, para que tenga la misma experiencia que con el search
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    const response = await API.audios.getAllAudios(filters);
+    setTotalPages(Math.ceil(response.length / itemsPerPage));
     setCurrentPage(1);
-    console.log("Searching for:", query);
-
-    // Simulate search delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    setSearchQuery(query);
+    setAudios(response);
     setIsSearching(false);
   };
 
-  const handleCategory = (category: string) => {
-    setSelectedCategory(category);
+  const searchAudios = async (searchText: string) => {
+    const response = await API.audios.searchAudios(searchText);
+    setTotalPages(Math.ceil(response.length / itemsPerPage));
     setCurrentPage(1);
-    console.log("Selected category:", category);
-
-    // Aquí podrías agregar lógica adicional para filtrar los audios por categoría
+    setAudios(response);
+    setIsSearching(false);
   };
 
-  const filteredAudios = mockAudios.filter((audio) =>
-    audio.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleSearch = async (query: string) => {
+    setIsSearching(true);
+    setSelectedCategory(null);
+    if (query) {
+      searchAudios(query);
+    } else {
+      getAudios();
+    }
+  };
 
-  const paginatedAudios = filteredAudios.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-  const totalPages = Math.ceil(filteredAudios.length / itemsPerPage);
+  const handleCategory = (category: ICategory | null) => {
+    setIsSearching(true);
+    setSearchQuery("");
+    setSelectedCategory(category);
+    // Se filtran los audios por categoria
+    getAudios({ ...(category ? { categoryId: category.id } : {}) });
+  };
+
   const handlePageChange = (page: number) => {
+    setPaginatedAudios(
+      audios.slice((page - 1) * itemsPerPage, page * itemsPerPage)
+    );
     setCurrentPage(page);
+  };
+
+  const refreshAudios = () => {
+    setSearchQuery("");
+    setSelectedCategory(null);
+    getAudios();
+    getCategories();
   };
 
   const toggleTheme = () => {
@@ -130,7 +111,12 @@ export default function Index() {
         {/* logo */}
         <h1 className="main-logo h-12 text-5xl font-bold">VozIndex</h1>
         {/* barra de busqueda */}
-        <SearchBar onSearch={handleSearch} isSearching={isSearching} />
+        <SearchBar
+          inputValue={searchQuery}
+          setInputValue={setSearchQuery}
+          onSearch={handleSearch}
+          isSearching={isSearching}
+        />
         <div className="flex items-center gap-2">
           {/* boton de cambiar de tema */}
           <Button
@@ -146,11 +132,15 @@ export default function Index() {
             )}
           </Button>
           {/* boton de agregar audio */}
-          <AddAudioDialog />
+          <AddAudioDialog refreshAudios={refreshAudios} />
         </div>
       </div>
 
-      <TagsSection tags={mockTags} onCategorySelect={handleCategory} />
+      <TagsSection
+        tags={categories}
+        selectedCategory={selectedCategory}
+        onCategorySelect={handleCategory}
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {isSearching ? (
@@ -172,12 +162,14 @@ export default function Index() {
         ) : (
           // Muestra un mensaje si no encuentra resultados
           <div className="col-span-full text-center py-8">
-            <p className="text-lg text-muted-foreground">No videos found</p>
+            <p className="text-lg text-muted-foreground">
+              No se encontraron audios
+            </p>
           </div>
         )}
       </div>
 
-      {filteredAudios.length > itemsPerPage && (
+      {audios.length > itemsPerPage && (
         <div className="flex justify-center gap-2 mt-8">
           {Array.from({ length: totalPages }).map((_, index) => (
             <Button
