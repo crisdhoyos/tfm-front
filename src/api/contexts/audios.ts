@@ -31,4 +31,15 @@ const searchAudios = async (searchText: string): Promise<IAudio[]> => {
   }
 };
 
-export { getAllAudios, searchAudios };
+const getAudioById = async (id: string): Promise<IAudio | null> => {
+  try {
+    let url = `${API}/audios/${id}`;
+    const data = await fetch(url, getHeader);
+    return data.json();
+  } catch (error) {
+    console.error("Error buscando el audio:", error);
+    return null;
+  }
+};
+
+export { getAllAudios, getAudioById, searchAudios };

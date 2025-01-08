@@ -10,7 +10,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/audio/:id" element={<AudioDetail />} />
+          <Route path="/audio/:audioId" element={<AudioDetail />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
